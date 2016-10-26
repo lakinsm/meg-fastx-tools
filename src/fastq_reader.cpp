@@ -3,32 +3,26 @@
 #include <iostream>
 #include <assert.h>
 
-fastq_reader::fastq_reader(std::string forward_fp, std::string reverse_fp) : _forward_fp(forward_fp), _reverse_fp(reverse_fp) {}
-
-std::vector<std::string> fastq_reader::read_fastq(const std::string &fastq_file) {
-        std::ifstream ifs(fastq_file);
-	if(!ifs) {
-		std::cerr << "Could not open fastq file" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-        std::vector<std::string> reads;
-        std::string seq_id, seq, plus, qual;
-        while(std::getline(ifs, seq_id)) {
-                if(seq_id[0] == '@') {
-                        std::getline(ifs, seq);
-                        std::getline(ifs, plus);
-                        std::getline(ifs, qual);
-                }
-                reads.push_back(seq);
-        }
-	assert(reads.size() > 0);
-        ifs.close();
-        return reads;
+std::unordered_map< std::string, std::vector<std::string> > fastq_reader::read_fastq_pair() {
+    std::unordered_map< std::string,  std::vector<std::string> > read_map;
+    std::string seq_id, seq, plus, qual;
+    std::string short_id;
+    while(std::getline(std::cin, seq_id)) {
+            if(seq_id[0] == '@') {
+                    std::getline(std::cin, seq);
+                    std::getline(std::cin, plus);
+                    std::getline(std::cin, qual);
+            }
+            short_id = seq_id.substr(0, seq_id.find(' '));
+            read_map[short_id].push_back(seq_id);
+            read_map[short_id].push_back(seq);
+    }
+	assert(read_map.size() > 0);
+    return read_map;
 }
 
 struct fastq_pair fastq_reader::read() {
 	struct fastq_pair fp;
-	fp.forward = read_fastq(_forward_fp);
-	fp.reverse = read_fastq(_reverse_fp);
+	fp.read_pairs = read_fastq_pair();
 	return fp;
 }
