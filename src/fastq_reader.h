@@ -11,7 +11,6 @@ struct fastq_pair {
 
 class fastq_reader {
 public:
-	fastq_reader();
 	std::unordered_map< std::string, std::vector<std::string> > read_fastq_pair();
 	struct fastq_pair read();
 };
