@@ -8,14 +8,15 @@ std::unordered_map< std::string, std::vector<std::string> > fastq_reader::read_f
     std::string seq_id, seq, plus, qual;
     std::string short_id;
     while(std::getline(std::cin, seq_id)) {
-            if(seq_id[0] == '@') {
-                    std::getline(std::cin, seq);
-                    std::getline(std::cin, plus);
-                    std::getline(std::cin, qual);
-            }
-            short_id = seq_id.substr(0, seq_id.find(' '));
-            read_map[short_id].push_back(seq_id);
-            read_map[short_id].push_back(seq);
+        std::cout << seq_id << std::endl;
+        if(seq_id[0] == '@') {
+                std::getline(std::cin, seq);
+                std::getline(std::cin, plus);
+                std::getline(std::cin, qual);
+        }
+        short_id = seq_id.substr(0, seq_id.find(' '));
+        read_map[short_id].push_back(seq_id);
+        read_map[short_id].push_back(seq);
     }
 	assert(read_map.size() > 0);
     return read_map;
